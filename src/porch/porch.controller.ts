@@ -1,19 +1,19 @@
-import { Controller, Get, Headers } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { PorchService } from './porch.service';
 
 @Controller('porch')
 export class PorchController {
   constructor(private readonly porchService: PorchService) {}
 
+  // GET /porch
   @Get()
-  async getAllPorchData(
-    @Headers('x-supabase-url') supabaseUrl: string,
-    @Headers('x-supabase-key') supabaseKey: string,
-  ) {
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing Supabase credentials');
-    }
+  async getAllPorch() {
+    return await this.porchService.getAllPorchData();
+  }
 
-    return this.porchService.getAllPorchData(supabaseUrl, supabaseKey);
+  // GET /porch/:id
+  @Get(':id')
+  async getPorchById(@Param('id') id: string) {
+    return await this.porchService.getPorchById(Number(id));
   }
 }
