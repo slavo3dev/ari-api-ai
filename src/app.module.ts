@@ -4,11 +4,13 @@ import { AppService } from './app.service';
 import { SupabaseModule } from './supabase/supabase.module';
 import { ConfigModule } from '@nestjs/config';
 import { PorchModule } from './porch/porch.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
     SupabaseModule,
     PorchModule,
+    CommentsModule,
     ConfigModule.forRoot({
       isGlobal: true, // makes env variables available everywhere
     }),
