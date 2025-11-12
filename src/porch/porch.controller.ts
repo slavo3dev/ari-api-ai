@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Param,
   Body,
@@ -68,5 +69,17 @@ export class PorchController {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
+  }
+
+  @Patch(':id/like')
+  async addLike(@Param('id') id: string, @Body('email') email: string) {
+    const data = await this.porchService.addLike(id, email);
+    return { message: `Liked post ${id}`, data };
+  }
+
+  @Patch(':id/unlike')
+  async removeLike(@Param('id') id: string, @Body('email') email: string) {
+    const data = await this.porchService.removeLike(id, email);
+    return { message: `Removed like from post ${id}`, data };
   }
 }

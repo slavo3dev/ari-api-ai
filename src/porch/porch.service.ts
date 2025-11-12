@@ -77,4 +77,67 @@ export class PorchService {
       throw new NotFoundException(`Failed to delete porch with ID ${id}`);
     return { message: `Porch with ID ${id} deleted successfully` };
   }
+  // ✅ ADD LIKE
+  async addLike(id: string, email: string): Promise<Porch> {
+    // 1. Get existing record
+    const { data: porch, error: fetchError } = await this.supabase
+      .from('porch')
+      .select('likes')
+      .eq('new_id', id)
+      .single();
+
+    if (fetchError || !porch) throw new Error('Post not found');
+
+    // 2. Convert likes safely
+    const currentLikes: string[] = Array.isArray(porch.likes)
+      ? porch.likes
+      : typeof porch.likes === 'string'
+        ? porch.likes.split(',').filter(Boolean)
+        : [];
+
+    // 3. Add new like (avoid duplicates)
+    if (!currentLikes.includes(email)) {
+      currentLikes.push(email);
+    }
+
+    // 4. Update table
+    const { data: updated, error: updateError } = await this.supabase
+      .from('porch')
+      .update({ likes: currentLikes })
+      .eq('new_id', id)
+      .select()
+      .single();
+
+    if (updateError) throw updateError;
+    return updated as Porch;
+  }
+
+  // ✅ REMOVE LIKE
+  async removeLike(id: string, email: string): Promise<Porch> {
+    const { data: porch, error: fetchError } = await this.supabase
+      .from('porch')
+      .select('likes')
+      .eq('new_id', id)
+      .single();
+
+    if (fetchError || !porch) throw new Error('Post not found');
+
+    const currentLikes: string[] = Array.isArray(porch.likes)
+      ? porch.likes
+      : typeof porch.likes === 'string'
+        ? porch.likes.split(',').filter(Boolean)
+        : [];
+
+    const updatedLikes = currentLikes.filter((user) => user !== email);
+
+    const { data: updated, error: updateError } = await this.supabase
+      .from('porch')
+      .update({ likes: updatedLikes })
+      .eq('new_id', id)
+      .select()
+      .single();
+
+    if (updateError) throw updateError;
+    return updated as Porch;
+  }
 }
