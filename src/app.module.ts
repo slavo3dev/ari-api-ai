@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PorchModule } from './porch/porch.module';
 import { CommentsModule } from './comments/comments.module';
 import { SourcesModule } from './sources/sources.module';
+import { OpenAIModule } from './openai/openai.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SourcesModule } from './sources/sources.module';
     PorchModule,
     CommentsModule,
     SourcesModule,
+    OpenAIModule,
     ConfigModule.forRoot({
       isGlobal: true, // makes env variables available everywhere
     }),
