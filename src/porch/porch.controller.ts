@@ -30,9 +30,14 @@ export class PorchController {
 
   // ✅ READ ALL
   @Get()
-  async getAllPorchData(@Query('page') page = 0, @Query('limit') limit = 100) {
+  async getAllPorchData(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 0;
+    const limitNum = limit ? parseInt(limit, 10) : 100;
     try {
-      const data = await this.porchService.getAllPorchData(+page, +limit);
+      const data = await this.porchService.getAllPorchData(pageNum, limitNum);
       return { count: data.length, data };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
