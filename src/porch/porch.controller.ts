@@ -9,6 +9,7 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { PorchService, Porch } from './porch.service';
 
@@ -29,9 +30,9 @@ export class PorchController {
 
   // ✅ READ ALL
   @Get()
-  async getAllPorchData() {
+  async getAllPorchData(@Query('page') page = 0, @Query('limit') limit = 100) {
     try {
-      const data = await this.porchService.getAllPorchData();
+      const data = await this.porchService.getAllPorchData(+page, +limit);
       return { count: data.length, data };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

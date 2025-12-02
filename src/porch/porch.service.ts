@@ -29,11 +29,14 @@ export class PorchService {
   }
 
   // ✅ READ ALL
-  async getAllPorchData(): Promise<Porch[]> {
+  async getAllPorchData(page = 0, limit = 100): Promise<Porch[]> {
+    const start = page * limit;
+    const end = start + limit - 1;
     const { data, error } = await this.supabase
       .from('porch')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range(start, end);
 
     if (error) throw error;
     return data as Porch[];
