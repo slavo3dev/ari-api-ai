@@ -30,8 +30,11 @@ export class PorchService {
 
   // ✅ READ ALL
   async getAllPorchData(page = 0, limit = 100): Promise<Porch[]> {
-    const start = page * limit;
-    const end = start + limit - 1;
+    const pageNum = Number.isInteger(page) && page >= 0 ? page : 0;
+    const limitNum = Number.isInteger(limit) && limit > 0 ? limit : 100;
+
+    const start = pageNum * limitNum;
+    const end = start + limitNum - 1;
     const { data, error } = await this.supabase
       .from('porch')
       .select('*')
