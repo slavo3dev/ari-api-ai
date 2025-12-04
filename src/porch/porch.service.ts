@@ -146,4 +146,14 @@ export class PorchService {
     if (updateError) throw updateError;
     return updated as Porch;
   }
+
+  async countLearningDaysByEmail(email: string): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('porch')
+      .select('*', { count: 'exact', head: true })
+      .eq('email', email);
+
+    if (error) throw error;
+    return count || 0;
+  }
 }

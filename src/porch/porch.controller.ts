@@ -88,4 +88,21 @@ export class PorchController {
     const data = await this.porchService.removeLike(id, email);
     return { message: `Removed like from post ${id}`, data };
   }
+  // ✅ LEARNING DAYS COUNT
+  @Get('user/count')
+  async getUserLearningDays(@Query('email') email: string) {
+    if (!email) {
+      throw new HttpException('Email is required', HttpStatus.BAD_REQUEST);
+    }
+
+    try {
+      const count = await this.porchService.countLearningDaysByEmail(email);
+      return { email, learningDays: count };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Failed to count learning days',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }
