@@ -1,0 +1,2 @@
+export const SUPABASE_AUTH = 'SUPABASE_AUTH';
+export const SUPABASE_CMS = 'SUPABASE_CMS';
