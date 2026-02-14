@@ -29,11 +29,17 @@ export class PorchService {
   }
 
   // ✅ READ ALL
-  async getAllPorchData(): Promise<Porch[]> {
+  async getAllPorchData(page = 0, limit = 100): Promise<Porch[]> {
+    const pageNum = Number.isInteger(page) && page >= 0 ? page : 0;
+    const limitNum = Number.isInteger(limit) && limit > 0 ? limit : 100;
+
+    const start = pageNum * limitNum;
+    const end = start + limitNum - 1;
     const { data, error } = await this.supabase
       .from('porch')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range(start, end);
 
     if (error) throw error;
     return data as Porch[];
@@ -139,5 +145,15 @@ export class PorchService {
 
     if (updateError) throw updateError;
     return updated as Porch;
+  }
+
+  async countLearningDaysByEmail(email: string): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('porch')
+      .select('*', { count: 'exact', head: true })
+      .eq('email', email);
+
+    if (error) throw error;
+    return count || 0;
   }
 }
